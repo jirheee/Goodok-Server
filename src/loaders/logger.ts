@@ -3,6 +3,8 @@ import config from "@/config";
 
 const transports = [];
 
+winston.addColors({ http: "magenta" });
+
 if (process.env.NODE_ENV !== "development") {
   transports.push(new winston.transports.Console());
 } else {
