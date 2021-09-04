@@ -10,6 +10,9 @@ export class Post extends Base {
     @Column({ type: "longtext" })
     body: string;
 
+    @Column({ type: "text" })
+    url: string;
+
     @OneToOne(() => Image)
     @JoinColumn()
     imageSrc: Image;
