@@ -1,5 +1,13 @@
-import { Column, Entity } from "typeorm";
+import { OneToOne, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Base } from "./base";
-
+import { Post } from "./post";
+import { User } from "./user";
 @Entity()
-export class Bookmark extends Base {}
+export class Bookmark extends Base {
+    @OneToOne(() => Post)
+    @JoinColumn()
+    post: Post;
+
+    @ManyToOne(() => User, user => user.subscribe)
+    user: User;
+}
