@@ -1,6 +1,7 @@
-import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
+import { Column, Entity, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { Base } from "./base";
 import { Image } from "./image"
+import { Website } from "./website";
 
 @Entity()
 export class Post extends Base {
@@ -16,4 +17,7 @@ export class Post extends Base {
     @OneToOne(() => Image)
     @JoinColumn()
     imageSrc: Image;
+    
+    @ManyToOne(() => Website, website => website.posts)
+    website: Website;
 }
