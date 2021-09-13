@@ -8,6 +8,6 @@ export class Bookmark extends Base {
     @JoinColumn()
     post: Post;
 
-    @ManyToOne(() => User, user => user.subscribe)
+    @ManyToOne(() => User, user => user.bookmarks)
     user: User;
 }
