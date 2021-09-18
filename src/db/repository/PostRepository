@@ -1,0 +1,75 @@
+import { EntityRepository, AbstractRepository, Not, getRepository } from "typeorm";
+import { Post } from "../entity/Post";
+import { Subscribe } from "../entity/subscribe";
+import { User } from "../entity/User";
+import { isNil } from "lodash";
+
+
+const userRepository = getRepository(User); 
+@EntityRepository(Post)
+class PostRepository extends AbstractRepository<Post> {
+
+  public findById(id: number): Promise<Post | undefined> {
+    return this.repository.findOne({ id });
+  }
+
+  public findByQuery(id: number): Promise<Post[] | undefined> {
+    return this.repository.find({
+        select: ["firstName", "lastName"],
+        relations: ["profile", "photos", "videos"],
+        where: {
+            firstName: "Timber",
+            lastName: "Saw",
+            profile: {
+                userName: "tshaw",
+            },
+        },
+        order: {
+            name: "ASC",
+            id: "DESC",
+        },
+        skip: 5,
+        take: 10,
+        cache: true,
+    });
+  }
+
+  async isDuplicate(user: { id?: number; username?: string }) {
+    if (isNil(user.username)) return null;
+
+    const where =
+      user.id !== undefined
+        ? { username: user.username, id: Not(user.id) }
+        : { username: user.username };
+
+    return (await this.repository.count({ where })) > 0;
+  }
+
+  async register(email: string, nickname: string, password: string): Promise<User> {
+    return this.manager.transaction(async transactionManager => {
+      const newUser = new User();
+      newUser.email = email;
+      newUser.nickname = nickname;
+      newUser.password = password;
+
+      const registeredUser = await transactionManager.save(newUser);
+      return registeredUser;
+    });
+  }
+
+  async updateUser(user: User, nickname?: string, password?: string, description?: string) {
+    return this.manager.transaction(async transactionManager => {
+      user.nickname = nickname ?? user.nickname;
+      user.password = password ?? user.password;
+      user.description = description ?? user.description;
+
+      return await transactionManager.save(user);
+    });
+  }
+
+  async deleteUser(user: User) {
+    return this.manager.remove(user);
+  }
+}
+
+export default PostRepository;
