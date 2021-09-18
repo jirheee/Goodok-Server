@@ -1,15 +1,16 @@
 const { spawn } = require("child_process");
 
 // python3 main.py -t "Naver" -u "https://news.naver.com/main/list.naver?mode=LS2D&mid=shm&sid1=101&sid2=259" -n 3
+type CRAWLER_TYPE = "Naver" | "velog";
 
-class CrawlerSpawner {
-  crawlerType;
-  url;
-  numPosts;
-  crawler;
-  result;
+class Crawler {
+  public crawlerType: CRAWLER_TYPE;
+  public url: string;
+  public numPosts: number;
+  public crawler: any;
+  public result: string;
 
-  constructor(crawlerType, url, numPosts) {
+  constructor(crawlerType: CRAWLER_TYPE, url: string, numPosts: number) {
     this.crawlerType = crawlerType;
     this.url = url;
     this.numPosts = numPosts;
@@ -45,10 +46,10 @@ class CrawlerSpawner {
 }
 
 async function run() {
-  const crawler = new CrawlerSpawner(
+  const crawler = new Crawler(
     "Naver",
     "https://news.naver.com/main/list.naver?mode=LS2D&mid=shm&sid1=100&sid2=264",
-    "5"
+    2
   );
 
   crawler.run();

@@ -39,11 +39,7 @@ class NaverCrawler(baseCrawler):
             all_text = content.text
             content_text = all_text.replace(headline_text, '').replace(img_text, '')
             
-            # sub_result['headline'] = headline_text
-            # sub_result['img_text'] = img_text
             sub_result['content'] = content_text
-
-            print(sub_result)
 
             result.append(sub_result)
                 
