@@ -1,4 +1,4 @@
-const { spawn } = require("child_process");
+import { spawn } from "child_process";
 
 // python3 main.py -t "Naver" -u "https://news.naver.com/main/list.naver?mode=LS2D&mid=shm&sid1=101&sid2=259" -n 3
 type CRAWLER_TYPE = "Naver" | "velog";
@@ -25,7 +25,7 @@ class Crawler {
       "-u",
       this.url,
       "-n",
-      this.numPosts
+      this.numPosts.toString()
     ]);
 
     this.crawler.stdout.on("data", data => {
