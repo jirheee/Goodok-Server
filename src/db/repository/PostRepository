@@ -1,74 +1,45 @@
-import { EntityRepository, AbstractRepository, Not, getRepository } from "typeorm";
+import { EntityRepository, AbstractRepository } from "typeorm";
 import { Post } from "../entity/Post";
 import { Subscribe } from "../entity/subscribe";
-import { User } from "../entity/User";
-import { isNil } from "lodash";
 
-
-const userRepository = getRepository(User); 
 @EntityRepository(Post)
 class PostRepository extends AbstractRepository<Post> {
-
+  //postid가 주어졌을 때 해당 포스트 반환
   public findById(id: number): Promise<Post | undefined> {
     return this.repository.findOne({ id });
   }
-
-  public findByQuery(id: number): Promise<Post[] | undefined> {
-    return this.repository.find({
-        select: ["firstName", "lastName"],
-        relations: ["profile", "photos", "videos"],
-        where: {
-            firstName: "Timber",
-            lastName: "Saw",
-            profile: {
-                userName: "tshaw",
-            },
-        },
-        order: {
-            name: "ASC",
-            id: "DESC",
-        },
-        skip: 5,
-        take: 10,
-        cache: true,
-    });
-  }
-
-  async isDuplicate(user: { id?: number; username?: string }) {
-    if (isNil(user.username)) return null;
-
-    const where =
-      user.id !== undefined
-        ? { username: user.username, id: Not(user.id) }
-        : { username: user.username };
-
-    return (await this.repository.count({ where })) > 0;
-  }
-
-  async register(email: string, nickname: string, password: string): Promise<User> {
-    return this.manager.transaction(async transactionManager => {
-      const newUser = new User();
-      newUser.email = email;
-      newUser.nickname = nickname;
-      newUser.password = password;
-
-      const registeredUser = await transactionManager.save(newUser);
-      return registeredUser;
-    });
-  }
-
-  async updateUser(user: User, nickname?: string, password?: string, description?: string) {
-    return this.manager.transaction(async transactionManager => {
-      user.nickname = nickname ?? user.nickname;
-      user.password = password ?? user.password;
-      user.description = description ?? user.description;
-
-      return await transactionManager.save(user);
-    });
-  }
-
-  async deleteUser(user: User) {
-    return this.manager.remove(user);
+  //쿼리스트링으로 주어진 조건으로 포스트 배열 반환
+  public findByQuery(
+    id: number,
+    limit: number,
+    offset: number,
+    subscribe: string
+  ): Promise<Post[] | undefined> {
+    return this.repository
+      .createQueryBuilder("post")
+      .where(qb => {
+        const subQuery =
+          subscribe === null
+            ? qb
+                .subQuery()
+                .select("subscribe.website")
+                .from(Subscribe, "subscribe")
+                .where("subscribe.user.id = :userId")
+                .getQuery()
+            : qb
+                .subQuery()
+                .select("subscribe.website")
+                .from(Subscribe, "subscribe")
+                .where("subscribe.user.id = :userId")
+                .andWhere("subscribe.website = :subscribeName", { subscribe })
+                .getQuery();
+        return "post.website IN " + subQuery;
+      })
+      .setParameter("userId", id)
+      .orderBy("post.createdAt")
+      .limit(limit)
+      .offset(offset)
+      .getMany();
   }
 }
 
