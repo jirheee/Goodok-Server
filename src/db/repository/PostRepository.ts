@@ -1,5 +1,5 @@
 import { EntityRepository, AbstractRepository } from "typeorm";
-import { Post } from "../entity/Post";
+import { Post } from "../entity/post";
 import { Subscribe } from "../entity/subscribe";
 
 @EntityRepository(Post)

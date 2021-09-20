@@ -12,8 +12,7 @@ class PostService {
   public fromId = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const postId: number = Number(req.params.postid);
-      const post: Promise<Post | undefined> =
-        await this.postRepository.findById(postId);
+      const post = await this.postRepository.findById(postId);
 
       if (post === undefined) {
         next(`Find Post Error: no such post ${postId}`);
@@ -35,7 +34,7 @@ class PostService {
       if (!("limit" in req.query)) {
         next(`Limit Post Error: no limit`);
       }
-      const userId: number = Number(1); //req.user.id
+      const userId: number = Number(1); //user api 추가한뒤 req.user.id로 수정
       const limit: number = Number(req.query.limit);
       const offset: number =
         "offset" in req.query ? Number(req.query.offset) : 0;
@@ -47,21 +46,20 @@ class PostService {
         offset,
         subscribe
       );
-      if (post === undefined) {
+      if (post.length === 0) {
         next(`Empty Post In ${userId}`);
       }
-
-      if ("search" in req.query && "subscribe" in req.query) {
+      if ("search" in req.query) {
         const result: Post[] = post.filter(v =>
-          v.title.includes(req.query.search)
+          v.title.includes(String(req.query.search))
         );
-        if (result === undefined) {
+        if (result.length === 0) {
           next(
             `Find Post Error: no result from search word ${req.query.search}`
           );
         }
         console.log(result);
-        res.json({ posts: post }).status(200);
+        res.json({ posts: result }).status(200);
         next();
       }
       console.log(post);
