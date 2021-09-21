@@ -14,7 +14,6 @@ export class Subscribe extends Base {
     @ManyToOne(() => User, user => user.subscribes)
     user: User;
 
-    @OneToOne(() => Website)
-    @JoinColumn()
-    url: Website;
+    @ManyToOne(() => Website, website => website.subscribes)
+    website: Website;
 }
