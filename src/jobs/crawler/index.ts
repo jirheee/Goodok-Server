@@ -6,11 +6,14 @@ import { Crawler, CRAWLER_TYPE } from "./crawler";
 
 import config from "@/config";
 
+const NUM_CRAWL = 5;
+
 function getCrawlerType(url: string): CRAWLER_TYPE {
+  //TODO: parse url and get Crawler type needed
   return "Naver";
 }
 
-export async function Crawl() {
+async function Crawl() {
   const connection = await createConnection(config.db);
 
   const websiteRepository = connection.getCustomRepository(WebsiteRepository);
@@ -23,7 +26,7 @@ export async function Crawl() {
     const url = website.domain;
     const crawlerType = getCrawlerType(url);
     // TODO: how to decide number of posts
-    const crawler = new Crawler(crawlerType, url, 5);
+    const crawler = new Crawler(crawlerType, url, NUM_CRAWL);
     const crawledPosts = await crawler.run();
 
     const savePromises = crawledPosts.map(async post => {
