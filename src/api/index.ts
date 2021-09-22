@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import user from "./routes/user";
+import post from "./routes/post";
 import auth from "./routes/auth";
 
 export default () => {
@@ -8,6 +9,7 @@ export default () => {
 
   auth(app);
   user(app);
+  post(app);
 
   return app;
 };
