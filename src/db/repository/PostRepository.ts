@@ -1,6 +1,9 @@
+import { IPost } from "@/interfaces/IPost";
 import { EntityRepository, AbstractRepository } from "typeorm";
+import { Image } from "../entity/image";
 import { Post } from "../entity/post";
 import { Subscribe } from "../entity/subscribe";
+import { Website } from "../entity/website";
 
 @EntityRepository(Post)
 class PostRepository extends AbstractRepository<Post> {
@@ -40,6 +43,16 @@ class PostRepository extends AbstractRepository<Post> {
       .limit(limit)
       .offset(offset)
       .getMany();
+  }
+
+  public savePost(post: IPost, img: Image, webSite: Website): Promise<Post> {
+    const newPost = new Post();
+    newPost.title = post.title;
+    newPost.body = post.content;
+    newPost.imageSrc = img;
+    newPost.url = post.link;
+    newPost.website = webSite;
+    return this.repository.save(newPost);
   }
 }
 
