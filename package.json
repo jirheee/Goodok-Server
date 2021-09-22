@@ -7,7 +7,9 @@
   "author": "JungInRhee",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "crawl": "ts-node -r tsconfig-paths/register --transpile-only ./src/jobs/crawler/index.ts",
+    "seed": "ts-node -r tsconfig-paths/register --transpile-only ./src/jobs/seed/seed.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
