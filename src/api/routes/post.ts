@@ -1,4 +1,3 @@
-import { Post } from "@/db/entity/post";
 import { Router } from "express";
 import PostService from "@/services/PostService";
 import PostRepository from "@/db/repository/PostRepository";
