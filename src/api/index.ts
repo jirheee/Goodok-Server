@@ -3,6 +3,7 @@ import { Router } from "express";
 import user from "./routes/user";
 import post from "./routes/post";
 import auth from "./routes/auth";
+import subscribe from "./routes/subscribe";
 
 export default () => {
   const app = Router();
@@ -10,6 +11,7 @@ export default () => {
   auth(app);
   user(app);
   post(app);
+  subscribe(app);
 
   return app;
 };
