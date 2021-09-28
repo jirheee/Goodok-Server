@@ -12,8 +12,11 @@ import { connectionOptions } from "./ormconfig";
 export default {
   httpPort: Number(process.env.HTTP_PORT),
   db: connectionOptions,
-  jwtSecret: process.env.JWT_SECRET,
-  jwtAlgorithm: process.env.JWT_ALGO,
+  jwt: {
+    jwtSecret: process.env.JWT_SECRET,
+    jwtAlgorithm: process.env.JWT_ALGO,
+    jwtExpire: process.env.TOKEN_EXPIRE
+  },
   logs: {
     level: process.env.LOG_LEVEL ?? "silly"
   },

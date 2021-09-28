@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getCustomRepository } from "typeorm";
+import AuthService from "@/services/AuthService";
 
 const route = Router();
 
@@ -9,13 +10,13 @@ export default (app: Router) => {
   const userService: UserService = new UserService(
     getCustomRepository(UserRepository)
   );
-  route.post("/login", userService.login, authService.newAccessToken);
+  route.post("/login", userService.login, authService.addAccessToken);
   route.post("/", userService.signup);
   route.put(
     "/profile",
     authService.checkAccessToken,
     userService.changeProfile,
-    authService.newAccessToken
+    authService.addAccessToken
   );
   route.put(
     "/search_list",

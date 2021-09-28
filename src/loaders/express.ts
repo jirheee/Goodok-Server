@@ -4,6 +4,7 @@ import morgan, { StreamOptions } from "morgan";
 import routes from "@/api";
 import config from "@/config";
 import Logger from "@/loaders/logger";
+import { nextTick } from "process";
 
 export default ({ app }: { app: express.Application }) => {
   app.use(cors());
@@ -25,7 +26,6 @@ export default ({ app }: { app: express.Application }) => {
   app.head("/status", (req, res) => {
     res.status(200).end();
   });
-
   app.use(config.api.prefix, routes());
 
   app.use((req, res, next) => {
@@ -44,6 +44,6 @@ export default ({ app }: { app: express.Application }) => {
 
   app.use((err, req, res, next) => {
     res.status(err.status ?? 500);
-    res.json({ errors: { message: err.message } });
+    res.json({ errors: { message: err } });
   });
 };
