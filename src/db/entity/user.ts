@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import { Base } from "./base";
 import { Bookmark } from "./bookmark";
+import { Searchlist } from "./search";
 import { Subscribe } from "./subscribe";
 
 @Entity()
@@ -12,8 +13,11 @@ export class User extends Base {
   password!: string;
 
   @OneToMany(() => Subscribe, subscribe => subscribe.user)
-  subscribes: Subscribe[];
+  subscribes?: Subscribe[];
 
   @OneToMany(() => Bookmark, bookmark => bookmark.user)
-  bookmarks: Bookmark[];
+  bookmarks?: Bookmark[];
+
+  @OneToMany(() => Searchlist, searchlist => searchlist.user)
+  searchlists?: Subscribe[];
 }

@@ -4,5 +4,5 @@ export class Base {
   @PrimaryGeneratedColumn()
   public id: number;
   @CreateDateColumn()
-  public createdAt: string;
+  public createdAt?: string;
 }
