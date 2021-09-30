@@ -6,7 +6,6 @@ export class UserRepository extends AbstractRepository<User> {
   public saveUser(email: string, password: string): Promise<User> {
     return this.repository.save({ email, password });
   }
-
   public drop() {
     return this.repository
       .createQueryBuilder()
@@ -14,4 +13,9 @@ export class UserRepository extends AbstractRepository<User> {
       .where("id > 0")
       .execute();
   }
+  public updateUser() {}
+  public updateSearch() {}
+  public getUser() {}
 }
+
+export default UserRepository;

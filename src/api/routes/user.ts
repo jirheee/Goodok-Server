@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { getCustomRepository } from "typeorm";
 import AuthService from "@/services/AuthService";
-
+import UserService from "@/services/UserService";
+import UserRepository from "@/db/repository/UserRepository";
 const route = Router();
 
 export default (app: Router) => {
@@ -21,7 +22,7 @@ export default (app: Router) => {
   route.put(
     "/search_list",
     authService.checkAccessToken,
-    userService.changeSearch
+    userService.changeSearchlist
   );
   route.delete("/", authService.checkAccessToken, userService.deleteUser);
 };

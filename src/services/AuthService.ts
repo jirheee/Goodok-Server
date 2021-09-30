@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import config from "@/config";
 import User from "@/db/entity/user";
-import Subscribe from "@/db/entity/subscribe";
 
 export interface UserPayloadInterface {
   id: number;
@@ -11,7 +10,6 @@ export interface UserPayloadInterface {
 export interface ResponseInterface {
   email: string;
   search_list: string[] | null;
-  subscribe_list: Subscribe[] | null;
 }
 
 class AuthService {
@@ -34,8 +32,7 @@ class AuthService {
 
     const information: ResponseInterface = {
       email: user.email,
-      search_list: user.search_list,
-      subscribe_list: user.subscribe_list
+      search_list: user.searchlists
     };
 
     const token = await this.generateToken(payload);
@@ -55,11 +52,11 @@ class AuthService {
     if (!token) {
       next("wrong token format or token is not sended");
     }
-    jwt.verify(token, this.SECRET, (error, user) => {
+    jwt.verify(token, this.SECRET, (error, userPayload) => {
       if (error) {
         next(error);
       }
-      req.user = user;
+      req.userPayload = userPayload;
       next();
     });
   };
