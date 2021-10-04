@@ -13,6 +13,19 @@ export class UserRepository extends AbstractRepository<User> {
       .where("id > 0")
       .execute();
   }
+  public findOneByEmail(email:string) : Promise<User | undefined>{
+    return this.repository.findOne({email});
+  }
+  public saveUserInfo(email:string, password:string) : Promise<User>{
+    const newUser = new User();
+    newUser.email = email;
+    newUser.password = password;
+    // 나머지는 비워두면 되나?
+    //  newUser.searchlists = ;
+    //  newUser.subscribes = ;
+    //  newUser.bookmarks = ;
+    return this.repository.save(newUser);
+  }
   public updateUser() {}
   public updateSearch() {}
   public getUser() {}

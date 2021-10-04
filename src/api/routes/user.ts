@@ -12,7 +12,7 @@ export default (app: Router) => {
     getCustomRepository(UserRepository)
   );
   route.post("/login", userService.login, authService.addAccessToken);
-  route.post("/", userService.signup);
+  route.post("/", userService.signin);
   route.put(
     "/profile",
     authService.checkAccessToken,
