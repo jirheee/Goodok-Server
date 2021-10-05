@@ -37,6 +37,7 @@ class UserService {
       if(userInfo){
         if(userInfo.password == userPassword){
           req.user = {id: req.userPayload.id, email : userInfo.email, search_list: userInfo.searchlists};
+          next();
         } else{
           throw{message : "존재하지 않은 이메일?(아이디)입니다"};
         }
